@@ -1,0 +1,25 @@
+{
+  "name": "medbox",
+  "version": "1.0.0",
+  "description": "Final project for Mobile Computing @ UF",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allenwhitedev/Medbox.git"
+  },
+  "author": "allenwhitedev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/allenwhitedev/Medbox/issues"
+  },
+  "homepage": "https://github.com/allenwhitedev/Medbox#readme",
+  "dependencies": {
+    "express": "^4.15.2",
+    "mongodb": "^2.2.25",
+    "socket.io": "^1.7.3"
+  }
+}

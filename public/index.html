@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Medbox</title>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+
+<script 
+  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+  crossorigin="anonymous"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script> let socket = io(); </script>
+
+<body>
+
+<h1 class="textCenter">Medbox Home Page</h1>
+
+<form class="testMessageForm" onsubmit="sendTestMessage(); return false;">
+	<input type="text" name="testMessage" id='testMessageInput' placeholder='test message' />
+</form>
+
+<ul id='oldTestMessages'>
+</ul>
+
+<ul id="testMessages">
+</ul>
+
+
+</body>
+
+<script type="text/javascript">
+let	sendTestMessage = function()
+{
+	let testMessage = $('#testMessageInput').val()
+	console.log('testMessage', testMessage)
+	console.log('socket', socket)
+	socket.emit('test message', testMessage)
+
+	$('#testMessageInput').val("") 
+}
+
+socket.on('test message', (message) =>
+{
+	$('#testMessages').append( $('<li>').text(message) )
+})
+
+</script>
+
+
+</html>
