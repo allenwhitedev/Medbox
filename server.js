@@ -8,7 +8,7 @@ let MongoClient = mongodb.MongoClient
 let http = require('http').Server(app)
 let io = require('socket.io')(http)
 
-let mongoUrl = require('./config').mongoUrl
+let mongoUrl = process.env.MONGOURL || require('./config').mongoUrl
 // global db variable is not best practice and will be refactored
 let gDB = null
 
