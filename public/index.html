@@ -4,29 +4,320 @@
 <head>
 	<title>Medbox</title>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
+	
+	<!-- import jquery -->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  	integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+  	crossorigin="anonymous">
+  </script> 
+  <!-- import socket.io -->
+	<script src="/socket.io/socket.io.js"></script>
+	<!-- import custom css -->
+	<link rel="stylesheet" type="text/css" href="./css/styles.css">
+	<!-- import animate.css -->
+	<link rel="stylesheet" type="text/css" href="./css/animate.css">
+	<!-- import material icons -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
 </head>
+	<!-- import Lato font -->
+	<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 
-<script 
-  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-  integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
-  crossorigin="anonymous"></script>
-<script src="/socket.io/socket.io.js"></script>
+<!-- initialize socket -->
 <script> let socket = io(); </script>
 
 <body>
 
-<h1 class="textCenter">Medbox Home Page</h1>
 
-<form class="testMessageForm" onsubmit="sendTestMessage(); return false;">
-	<input type="text" name="testMessage" id='testMessageInput' placeholder='test message' />
-</form>
+<div class="wrapper">
 
-<ul id='oldTestMessages'>
-</ul>
+<!-- sidebar -->
+	<aside class='sidebar'>	
 
-<ul id="testMessages">
-</ul>
+		<img src='./img/cvsLogoAlternate.png' class="pharmacyLogoAlternate" />
 
+		<section class="pharmacyUser">
+			<img src='./img/pharmacist1Avatar.png' class="pharmacyUserAvatar textCenter" />
+			<h3 class="pharmacyUserName whiteText">Julia Lampros</h3>
+			<h5 class="pharmacyUserJob">Pharmacist</h5>
+		</section>
+
+		<nav class="iconNavigation">
+			<a href="#prescriptions" class='navIconAnchor' id='prescriptionsAnchor' onclick='goToPage()'> 
+				<i class="material-icons md-30 navIcon activeNavIcon" id='prescriptionsAnchor'>list</i> 
+			</a>
+			<a href="#history" class='navIconAnchor' id='historyAnchor' onclick='goToPage()'> 
+				<i class="material-icons md-30 navIcon" id='historyAnchor'>history</i> 
+			</a>
+			<a href="#account" class='navIconAnchor' id='accountAnchor' onclick='goToPage()'> 
+				<i class="material-icons md-30 navIcon" id='accountAnchor'>account_circle</i> 
+			</a>
+			
+		</nav>
+
+	</aside>
+
+<!-- navbar -->
+<header class='navbar'>
+	<div class="navbarContent">
+
+		<form class="searchForm"> <!-- search -->
+			<i class="material-icons md-dark fontSize14px searchIcon">search</i>
+			<input class='fontSize14px md-dark' id="searchInput" placeholder='Search'></input>
+		</form>
+
+		<h4 class="mostRecentNotification md-dark animated">
+			<span class="mostRecentPerson">Phil Heath </span>
+			<b class="mostRecentActionHighlight">picked up </b> 
+			<span class="mostRecentAction">their prescription</span>
+		</h4>
+
+		<section class="pharmacyLogoContainer">
+			<img src='./img/cvsLogo.png' class="pharmacyLogo" />
+		</section>
+
+	</div>
+</header>	
+
+<!-- main -->
+	<main>
+		<div class="mainContent">
+
+			<!-- prescriptions page -->
+			<div class="page displayNone animated2xSpeed fadeIn" id='prescriptionsPage'>
+
+			<br><br><br>
+
+				<ul class='prescriptions' id='oldTestMessages'>
+					
+					<li class="prescription md-dark">
+						<section class="statusDot"></section>
+						<h3 class='customerName tooltip'>Jill Doe &nbsp; - 
+							
+							<span class="tooltipBoxTop">
+								<p> 
+									<i class="material-icons">home</i> 
+									<span class='address'> &nbsp; 3452 NW Lincoln Street </span> 
+								</p>								
+								<p> 
+									<i class="material-icons">cake</i> 
+									<span class='address'> &nbsp; 10/17/1990 </span> 
+								</p>
+								<p class='hasApp'> 
+									<i class="material-icons">phonelink_erase</i> <!-- or <i class="material-icons">phone_iphone</i> -->
+									<span class='address'> &nbsp; does not have app </span> 
+								</p>
+								<div class="tooltipTriangleDown"></div>
+							</span>
+						
+						</h3>
+						<h4 class="drugInfo fontWeightNormal">
+							<span class="drugName">Amoxicillin </span>
+							<span class="dose">(10mg cap)</span>			
+						</h4>
+						
+						<ul class="prescriptionIcons">
+							<h3 class="quantity">Qty: 30 &nbsp;</h3>
+							<i class="material-icons md-dark md-30" title="Start filling prescription">local_pharmacy</i>
+							<i class="material-icons md-dark md-30" title="Call the patient or doctor">phone</i>
+							<i class="material-icons md-dark md-30" title="Change priority with drag">open_with</i>
+						</ul>
+					</li>
+
+					<li class="prescription md-dark">
+						<section class="statusDot"></section>
+						<h3 class='customerName tooltip'>John Williams &nbsp; - 
+							
+							<span class="tooltipBoxTop">
+								<p> 
+									<i class="material-icons">home</i> 
+									<span class='address'> &nbsp; 9482 NE Easy Street </span> 
+								</p>								
+								<p> 
+									<i class="material-icons">cake</i> 
+									<span class='address'> &nbsp; 16/22/1967 </span> 
+								</p>
+								<p class='hasApp'> 
+									<i class="material-icons">phonelink_erase</i> <!-- or <i class="material-icons">phone_iphone</i> -->
+									<span class='address'> &nbsp; does not have app </span> 
+								</p>
+								<div class="tooltipTriangleDown"></div>
+							</span>
+						
+						</h3>
+						<h4 class="drugInfo fontWeightNormal">
+							<span class="drugName">Clindamycin </span>
+							<span class="dose">(15mg cap)</span>			
+						</h4>
+						
+						<ul class="prescriptionIcons">
+							<h3 class="quantity">Qty: 25 &nbsp;</h3>
+							<i class="material-icons md-dark md-30" title="Start filling prescription">local_pharmacy</i>
+							<i class="material-icons md-dark md-30" title="Call the patient or doctor">phone</i>
+							<i class="material-icons md-dark md-30" title="Change priority with drag">open_with</i>
+						</ul>
+					</li>
+
+					<li class="prescription md-dark">
+						<section class="statusDot"></section>
+						<h3 class='customerName tooltip'>Toby Keith&nbsp; - 
+							
+							<span class="tooltipBoxTop">
+								<p> 
+									<i class="material-icons">home</i> 
+									<span class='address'> &nbsp; 9983 NW Washington Blvd </span> 
+								</p>								
+								<p> 
+									<i class="material-icons">cake</i> 
+									<span class='address'> &nbsp; 11/5/1988 </span> 
+								</p>
+								<p class='hasApp'> 
+									or <i class="material-icons">phone_iphone</i>
+									<span class='address'> &nbsp; does not have app </span> 
+								</p>
+								<div class="tooltipTriangleDown"></div>
+							</span>
+						
+						</h3>
+						<h4 class="drugInfo fontWeightNormal">
+							<span class="drugName">Accutane </span>
+							<span class="dose">(30mg cap)</span>			
+						</h4>
+						
+						<ul class="prescriptionIcons">
+							<h3 class="quantity">Qty: 20 &nbsp;</h3>
+							<i class="material-icons md-dark md-30" title="Start filling prescription">local_pharmacy</i>
+							<i class="material-icons md-dark md-30" title="Call the patient or doctor">phone</i>
+							<i class="material-icons md-dark md-30" title="Change priority with drag">open_with</i>
+						</ul>
+					</li>
+
+					<li class="prescription md-dark">
+						<section class="statusDot"></section>
+						<h3 class='customerName tooltip'>Jill Doe &nbsp; - 
+							
+							<span class="tooltipBoxTop">
+								<p> 
+									<i class="material-icons">home</i> 
+									<span class='address'> &nbsp; 3452 NW Lincoln Street </span> 
+								</p>								
+								<p> 
+									<i class="material-icons">cake</i> 
+									<span class='address'> &nbsp; 10/17/1990 </span> 
+								</p>
+								<p class='hasApp'> 
+									<i class="material-icons">phonelink_erase</i> <!-- or <i class="material-icons">phone_iphone</i> -->
+									<span class='address'> &nbsp; does not have app </span> 
+								</p>
+								<div class="tooltipTriangleDown"></div>
+							</span>
+						
+						</h3>
+						<h4 class="drugInfo fontWeightNormal">
+							<span class="drugName">Cephalexin </span>
+							<span class="dose">(100mg cap)</span>			
+						</h4>
+						
+						<ul class="prescriptionIcons">
+							<h3 class="quantity">Qty: 40 &nbsp;</h3>
+							<i class="material-icons md-dark md-30" title="Start filling prescription">local_pharmacy</i>
+							<i class="material-icons md-dark md-30" title="Call the patient or doctor">phone</i>
+							<i class="material-icons md-dark md-30" title="Change priority with drag">open_with</i>
+						</ul>
+					</li>
+
+					<li class="prescription md-dark">
+						<section class="statusDot"></section>
+						<h3 class='customerName tooltip'>Elijah Stockton &nbsp; - 
+							
+							<span class="tooltipBoxTop">
+								<p> 
+									<i class="material-icons">home</i> 
+									<span class='address'> &nbsp; 3323 NW Waverly Place </span> 
+								</p>								
+								<p> 
+									<i class="material-icons">cake</i> 
+									<span class='address'> &nbsp; 10/17/1990 </span> 
+								</p>
+								<p class='hasApp'> 
+									<i class="material-icons">phonelink_erase</i> <!-- or <i class="material-icons">phone_iphone</i> -->
+									<span class='address'> &nbsp; does not have app </span> 
+								</p>
+								<div class="tooltipTriangleDown"></div>
+							</span>
+						
+						</h3>
+						<h4 class="drugInfo fontWeightNormal">
+							<span class="drugName">Levofloxacin </span>
+							<span class="dose">(50mg cap)</span>			
+						</h4>
+						
+						<ul class="prescriptionIcons">
+							<h3 class="quantity">Qty: 45 &nbsp;</h3>
+							<i class="material-icons md-dark md-30" title="Start filling prescription">local_pharmacy</i>
+							<i class="material-icons md-dark md-30" title="Call the patient or doctor">phone</i>
+							<i class="material-icons md-dark md-30" title="Change priority with drag">open_with</i>
+						</ul>
+					</li>
+
+					<li class="prescription md-dark">
+						<section class="statusDot"></section>
+						<h3 class='customerName tooltip'>Elizabeth Curnrow &nbsp; - 
+							
+							<span class="tooltipBoxTop">
+								<p> 
+									<i class="material-icons">home</i> 
+									<span class='address'> &nbsp; 8573 Sesame Street </span> 
+								</p>								
+								<p> 
+									<i class="material-icons">cake</i> 
+									<span class='address'> &nbsp; 10/17/1990 </span> 
+								</p>
+								<p class='hasApp'> 
+									<i class="material-icons">phonelink_erase</i> <!-- or <i class="material-icons">phone_iphone</i> -->
+									<span class='address'> &nbsp; does not have app </span> 
+								</p>
+								<div class="tooltipTriangleDown"></div>
+							</span>
+						
+						</h3>
+						<h4 class="drugInfo fontWeightNormal">
+							<span class="drugName">Erythromycin </span>
+							<span class="dose">(30mg cap)</span>			
+						</h4>
+						
+						<ul class="prescriptionIcons">
+							<h3 class="quantity">Qty: 15 &nbsp;</h3>
+							<i class="material-icons md-dark md-30" title="Start filling prescription">local_pharmacy</i>
+							<i class="material-icons md-dark md-30" title="Call the patient or doctor">phone</i>
+							<i class="material-icons md-dark md-30" title="Change priority with drag">open_with</i>
+						</ul>
+					</li>
+
+				</ul>
+
+				<form class="testMessageForm" onsubmit="sendTestMessage(); return false;">
+					<input type="text" name="testMessage" id='testMessageInput' placeholder='test message' />
+				</form>
+
+				<ul id="testMessages">
+				</ul>
+
+			</div>
+
+			<!-- history page -->
+			<div class="page displayNone animated2xSpeed fadeIn" id='historyPage'>
+				<h1>History Page</h1>
+			</div>
+
+			<!-- account page -->
+			<div class="page displayNone animated2xSpeed fadeIn" id='accountPage'>
+				<h1>Account Page</h1>
+			</div>
+
+		</div>
+	</main>
+
+</div>
 
 </body>
 
@@ -48,5 +339,36 @@ socket.on('test message', (message) =>
 
 </script>
 
+<!-- Page load initialization -->
+<script type="text/javascript">
+
+$(document).ready( () =>
+{
+	// go to appropriate page
+	let hash = window.location.hash || "#prescriptions" 
+	$(hash + "Anchor").addClass('active')
+	$(hash + "Page").removeClass('displayNone')
+})
+
+</script>
+
+<!-- Events -->
+<script type="text/javascript">
+
+const goToPage = (e) =>
+{
+	let hash = window.location.hash || "#prescriptions"
+	let anchorId = "#" + window.event.target.id
+	let page = anchorId.replace('Anchor', 'Page')
+
+	$(hash + "Page").addClass('displayNone')
+	$(hash + "Anchor").removeClass('active')
+	
+	$(anchorId).addClass('active')
+	$(page).removeClass('displayNone')
+}
+
+	
+</script>
 
 </html>
