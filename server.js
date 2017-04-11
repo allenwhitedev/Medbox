@@ -4,6 +4,7 @@ app.use( express.static('public') )
 
 let mongodb = require('mongodb')
 let MongoClient = mongodb.MongoClient
+let ObjectId = mongodb.ObjectId
 
 let http = require('http').Server(app)
 let io = require('socket.io')(http)
@@ -100,6 +101,65 @@ let socketHandler = () =>
 	    console.log('test message received: ', message)
 	    io.emit('test message', message )
     })
+
+    socket.on('create prescription', (data) =>
+    {
+      let validationResult = validateNewPrescriptionData(data)
+      if ( validationResult !== "valid" )
+      {
+        console.log("Error: invalid create prescription data format")
+        return socket.emit('create prescription debug', validationResult)
+      }
+      gDB.collection('prescriptions').insertOne({data}, (err, result) =>
+      {
+        if (err)
+          return console.log(err)
+        console.log('Insert prescription successful!')
+        socket.emit('create prescription debug', "Successfully inserted prescription with id: " + result.insertedId)
+      })
+    })
+
+    socket.on('create patient', (data) =>
+    {
+      let validationResult = validateNewPatientData(data)
+      if ( validationResult !== "valid" )
+      {
+        console.log("Error: invalid create patient data format")
+        return socket.emit('create prescription debug', validationResult)
+      }
+      gDB.collection('patients').insertOne({data}, (err, result) =>
+      {
+        if (err)
+          return console.log(err)
+        console.log('Insert patient successful!')
+        socket.emit('create patient debug', "Successfully inserted patient with id: " + result.insertedId )
+      })
+    })
+
+    socket.on('update patient proximity', (data) =>
+    {
+      if ( !data._id )
+        socket.emit('update patient proximity debug', "Error: invalid patient id")
+
+      if ( data.proximity && data.proximity > 0 && data.proximity < 450 )
+      {
+        gDB.collection('patients').update({_id: ObjectId(data._id) }, 
+          {$set: {proximity: data.proximity} }, (err, result) =>
+        {
+          if (err)
+          {
+            console.log(err)
+            return socket.emit("update patient proximity debug", err)
+          }
+          console.log("Update patient proximity successfully")
+          socket.emit('update patient proximity debug', "Update proximity to " + data.proximity.toString() + " successful")
+        })     
+      }
+
+      else
+        socket.emit('update patient proximity debug', "Error: invalid proximity (use values between 0 and 450)")
+
+    })
   
     // socket events (mosca)
     moscaServer.on('clientConnected', (client) => 
@@ -134,3 +194,86 @@ let socketHandler = () =>
   })
 
 }
+
+// Server helper functions
+
+// validations
+let validateNewPrescriptionData = (data) =>
+{
+  let invalidFields = []
+
+  if (!data.drId)
+    invalidFields.push('drId')
+  if (!data.drPhoneNumber)
+    invalidFields.push('drPhoneNumber')
+  if (!data.drFirstName)
+    invalidFields.push('drFirstName')
+  if (!data.drLastName)
+    invalidFields.push('drLastname')
+  
+  if (!data.patientId)
+    invalidFields.push('patientId')
+  if (!data.patientFirstName)
+    invalidFields.push('patientFirstName')
+  if (!data.patientLastName)
+    invalidFields.push('patientLastName')
+  if (!data.patientBirthdate)
+    invalidFields.push('patientBirthdate')
+  if (!data.patientAddress)
+    invalidFields.push('patientAddress')
+  
+  if (!data.prescriptionId)
+    invalidFields.push('prescriptionId')
+  if (!data.prescriptionName)
+    invalidFields.push('prescriptionName')
+  if (!data.prescriptionName)
+    invalidFields.push('prescriptionDose')
+  if (!data.prescriptionName)
+    invalidFields.push('prescriptionQuantity')
+
+  if (invalidFields.length === 0)
+    return "valid"
+  else
+  {
+    let errorString = "Error: invalid data format for create prescription. \n Missing required fields:"
+
+    for (i in invalidFields)
+    {
+      let tmpString = "\n" + invalidFields[i]
+      errorString += "\n " + invalidFields[i]
+    }
+    return errorString
+  }
+}
+
+let validateNewPatientData = (data) =>
+{
+  console.log('validateNewPatientData()')
+  let invalidFields = []
+
+  if (!data.firstName)
+    invalidFields.push('firstName')
+  if (!data.lastName)
+    invalidFields.push('lastName')
+  if (!data.birthdate)
+    invalidFields.push('birthdate')
+  if (!data.address)
+    invalidFields.push('address')
+
+  if (invalidFields.length === 0)
+    return "valid"
+  else
+  {
+    let errorString = "Error: invalid data format for create patient. \n Missing required fields:"
+
+    for (i in invalidFields)
+    {
+      let tmpString = "\n" + invalidFields[i]
+      errorString += "\n " + invalidFields[i]
+    }
+    return errorString
+  }
+}
+
+
+
