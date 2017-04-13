@@ -6,9 +6,10 @@
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	
 	<!-- import jquery -->
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-  	integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
-  	crossorigin="anonymous">
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
   </script> 
   <!-- import socket.io -->
 	<script src="/socket.io/socket.io.js"></script>
@@ -390,7 +391,43 @@ const goToPage = (e) =>
 
 <!-- prescriptions list -->
 <script id='prescriptionsHandlebars' type="text/x-handlebars-template">
-<!-- 	<h1 class="textCenter">My name is: {{name}}, this: {{this}}</h1> -->
+	
+{{#each this}} <!-- each prescription -->
+<li class="prescription md-dark">
+	<section class="statusDot"></section>
+	<h3 class='customerName tooltip'>{{data.patientFirstName}} {{data.patientLastName}} &nbsp; - 
+		
+		<span class="tooltipBoxTop">
+			<p> 
+				<i class="material-icons">home</i> 
+				<span class='address'> &nbsp; {{data.patientAddress}} </span> 
+			</p>								
+			<p> 
+				<i class="material-icons">cake</i> 
+				<span class='address'> &nbsp; {{data.patientBirthdate}} </span> 
+			</p>
+			<p class='hasApp'> 
+				<i class="material-icons">phone_iphone</i>
+				<span class='address'> &nbsp; has the app </span> 
+			</p>
+			<div class="tooltipTriangleDown"></div>
+		</span>
+	
+	</h3>
+	<h4 class="drugInfo fontWeightNormal">
+		<span class="drugName">{{data.prescriptionName}}</span>
+		<span class="dose">{{data.prescriptionDose}}</span>			
+	</h4>
+	
+	<ul class="prescriptionIcons">
+		<h3 class="quantity">Qty: {{data.prescriptionQuantity}} &nbsp;</h3>
+		<i class="material-icons md-dark md-30" title="Start filling prescription">local_pharmacy</i>
+		<i class="material-icons md-dark md-30" title="Call the patient or doctor">phone</i>
+		<i class="material-icons md-dark md-30" title="Change priority with drag">open_with</i>
+	</ul>
+</li>
+{{/each}}
+
 </script>
 
 <!-- new prescription -->
@@ -436,10 +473,24 @@ const goToPage = (e) =>
 <script type="text/javascript">
 let source = $('#prescriptionsHandlebars').html()
 let template = Handlebars.compile(source)
-let data = {name: "Billy"}
-let html = template(data)
+// let data = {name: "Billy"}
+// let html = template(data)
 
-$('.prescriptions').append(html)
+
+var prescriptionsUrl = "http://localhost:3000/prescriptions";
+$.getJSON( prescriptionsUrl, {})
+  .done( (data) =>  
+  {
+
+  	let jsonData = data
+		let html = template(jsonData)
+		$('.prescriptions').append(html)
+		console.log('jsonData', jsonData)
+  })
+
+
+
+//$('.prescriptions').append(html)
 </script>
 
 
