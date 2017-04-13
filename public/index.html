@@ -69,7 +69,7 @@
 		</form>
 
 		<h4 class="mostRecentNotification md-dark animated">
-			<span class="mostRecentPerson">Phil Heath </span>
+			<span class="mostRecentPerson" id='mostRecentPerson'> </span>
 			<b class="mostRecentActionHighlight">picked up </b> 
 			<span class="mostRecentAction">their prescription</span>
 		</h4>
@@ -162,6 +162,15 @@ $(document).ready( () =>
 	$(hash + "Anchor").addClass('active')
 	$(hash + "Page").removeClass('displayNone')
 })
+
+let randPersonIndex = 0
+$('#mostRecentPerson').html("William Johnson")
+
+setInterval(() => {
+	randPersonIndex++
+	let randPersons = ["Phil Heath", "Billy Mays", "Jane Goodall", "Beth McBride", "Susy McDormitt", "Dill Stewart"]
+	$('#mostRecentPerson').html(randPersons[randPersonIndex])
+}, 30000)
 
 </script>
 
