@@ -93,6 +93,17 @@ let socketHandler = () =>
     {
       console.log('user disconnected')
     })
+    
+    // room testing
+    socket.on('join room', (patientId) =>
+    {
+      socket.join(patientId)
+    })
+    socket.on('room message', (message) =>
+    {
+      io.to('patientId2').emit('room message', "This is a room message for patientId2")
+    })
+
 
     socket.on('test message', (message) =>
     {
@@ -123,7 +134,7 @@ let socketHandler = () =>
         if (err)
           return console.log(err)
         console.log('Insert prescription successful!')
-        socket.emit('create prescription debug', "Successfully inserted prescription with id: " + result.insertedId)
+        socket.emit('create prescription debug', "Success: inserted prescription with id: " + result.insertedId)
       })
     })
 
@@ -146,7 +157,8 @@ let socketHandler = () =>
           if (err)
             return console.log(err)
           console.log('Insert patient successful!')
-          socket.emit('create patient debug', "Successfully inserted patient with id: " + result.insertedId )
+          // create room for patient (used for patient-specific events )
+          socket.emit('create patient debug', "Success: inserted patient with id: " + result.insertedId )
         })        
       }
 
