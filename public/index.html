@@ -477,7 +477,7 @@ let template = Handlebars.compile(source)
 // let html = template(data)
 
 
-var prescriptionsUrl = "http://localhost:3000/prescriptions";
+var prescriptionsUrl = "http://medbox.co/prescriptions";
 $.getJSON( prescriptionsUrl, {})
   .done( (data) =>  
   {

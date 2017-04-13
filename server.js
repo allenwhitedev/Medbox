@@ -15,6 +15,13 @@ let mongoUrl = process.env.MONGOURL || require('./config').mongoUrl
 // global db variable is not best practice and will be refactored
 let gDB = null
 
+// allows CORS
+app.use(function(req, res, next) 
+{
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  next()
+})
 
 // Mongo initialization
 MongoClient.connect(mongoUrl, (err, db) =>
