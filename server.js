@@ -122,7 +122,7 @@ let socketHandler = () =>
       io.to('patientId2').emit('room message', "This is a room message for patientId2")
     })
 
-
+    // test messages
     socket.on('test message', (message) =>
     {
 	    // store received test messages in mongo
@@ -136,6 +136,21 @@ let socketHandler = () =>
 	    
 	    console.log('test message received: ', message)
 	    io.emit('test message', message )
+    })
+
+    // mosca test
+    socket.on('test mosca', (data) =>
+    {
+      let message = 
+      {
+          topic: "open",
+          qos: 1, // qos == Quality of service --> 1 == deliver a message at least once (may be duplicates)
+          retain: false 
+      }  
+      moscaServer.publish(message, () =>
+      {
+        console.log('test publish to mosca')
+      })
     })
 
     socket.on('create prescription', (data) =>
