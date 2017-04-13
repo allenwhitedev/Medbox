@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title> Prescribe Medication </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- for mobile rendering -->
+
+    <!-- import jquery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous">
+    </script>
+  </head>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    let socket = io()
+  </script>
+  <body>
+    <h1> Pervasive Bling Hospital Medication Form </h1>
+    <h3> Required Doctor Information: </h3>
+    <div class="container">
+      <div class="row">
+       <div class="col-md-4"></div>
+       <div class="col-md-2">First Name:</div>
+       <div class="col-md-1">
+        Catherine
+       </div>
+      </div>
+      <div class="row">
+       <div class="col-md-4"></div>
+       <div class="col-md-2">Last Name:</div>
+       <div class="col-md-2">
+        Polinksi
+       </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4"></div>
+       <div class="col-md-2">Address:</div>
+       <div class="col-md-4">
+        593 SE Bling Road Gainesville, Fl
+       </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4"></div>
+       <div class="col-md-2">Phone Number:</div>
+       <div class="col-md-4">
+        555-555-5555
+       </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4"></div>
+       <div class="col-md-2">Id:</div>
+       <div class="col-md-1">
+        1234
+       </div>
+      </div>
+      <h3> Required Patient Information: </h3>
+      <form id="newPrescriptionForm" onSubmit='submitNewPrescription(); return false;' method="post">
+        <div class="row">
+         <div class="col-md-4"></div>
+         <div class="col-md-2">First Name:</div>
+         <div class="col-md-1">
+          <input type="text" name="patientfirst" id='firstName'>
+         </div>
+        </div>
+        <div class="row">
+         <div class="col-md-4"></div>
+         <div class="col-md-2">Last Name:</div>
+         <div class="col-md-1">
+          <input type="text" name="patientlast" id='lastName'>
+         </div>
+        </div>
+        <div class="row">
+         <div class="col-md-4"></div>
+         <div class="col-md-2">Birthdate:</div>
+         <div class="col-md-1">
+          <input type="date" name="birthdate" id='birthdate'>
+         </div>
+        </div>
+        <div class="row">
+         <div class="col-md-4"></div>
+         <div class="col-md-2">Address:</div>
+         <div class="col-md-1">
+          <input type="text" name="address" id='address'>
+         </div>
+        </div>
+        <h3> Prescription Information: </h3>
+         <div class="row">
+           <div class="col-md-4"></div>
+           <div class="col-md-2">Name:</div>
+           <div class="col-md-1">
+            <input type="text" name="prename" id='prescriptionName'>
+           </div>
+         </div>
+        <div class="row">
+         <div class="col-md-4"></div>
+         <div class="col-md-2">Dose:</div>
+         <div class="col-md-1">
+          <input type="text" name="dose" id='dose'>
+         </div>
+        </div>
+        <div class="row">
+         <div class="col-md-4"></div>
+         <div class="col-md-2">Quantity:</div>
+         <div class="col-md-1">
+          <input type="number" name="quantity" id='prescriptionQuantity'>
+         </div>
+        </div>
+        <div class="row">
+         <div class="col-md-4"></div>
+         <div class="col-md-2">Brand Required: (does nothing)</div>
+         <div class="col-md-1">
+          <input class="btn btn-default" type="checkbox" name="brandrequired">
+         </div>
+        </div>
+        <div class="row">
+         <div class="col-md-4"></div>
+         <div class="col-md-2">Controlled Substance: (does nothing)</div>
+         <div class="col-md-1">
+          <input class="btn btn-default" type="checkbox" name="controlledsub">
+         </div>
+        </div>
+        <div class="row">
+         <div class="col-md-6"></div>
+         <div class="col-md-1">
+          <br>
+          <button type="submit" class="btn btn-primary">Submit Prescription</button>
+         </div>
+        </div>
+      </form>
+
+<!-- Handle form submit -->
+<script>
+  socket.on('create prescription debug', (serverResult) =>
+  {
+    console.log('create prescription server result:', serverResult)
+  })
+</script>
+
+
+<script type="text/javascript">
+
+let submitNewPrescription = (e) =>
+{
+
+  firstName: $('#firstName').val()
+  let newPrescriptionData =
+  {
+    drId: "axyqkdn3892jjfn2",
+    drPhoneNumber: "352-355-3535",
+    drFirstName: "Catherine",
+    drLastName: "Polinski",
+    patientId: "x82jfjsl29la9",
+    patientFirstName: $('#firstName').val(),
+    patientLastName: $('#lastName').val(),
+    patientBirthdate: $('#birthdate'),
+    patientAddress: $('#address').val(),
+    prescriptionId: "o0293jf920rjjskkb",
+    prescriptionName: $('#prescriptionName').val(),
+    prescriptionDose: $('#prescriptionDose').val(),
+    prescriptionQuantity: $('#prescriptionQuantity').val()
+  } 
+  console.log('newPrescriptionData', newPrescriptionData)
+  socket.emit('create prescription', newPrescriptionData)
+}
+
+
+</script>
+
+      <style type="text/css">
+        body {
+            background-color: powderblue;
+          text-align: center;
+        }
+        h1 {
+            text-align: center;
+        }
+        h3 {
+            text-align: center;
+        }
+      </style>
+  </body>
+</html>

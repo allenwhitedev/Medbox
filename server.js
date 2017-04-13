@@ -56,6 +56,11 @@ app.get('/', (req, res) =>
   res.sendFile('index.html')
 })
 
+app.get('/doctorform', (req, res) =>
+{
+  res.sendFile( __dirname + "/public/" + "doctorform.html" )
+})
+
 app.get('/testMessages', (req, res) =>
 {
 	gDB.collection('testMessages').find().toArray( (err, result) =>
