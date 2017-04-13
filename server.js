@@ -168,6 +168,7 @@ let socketHandler = () =>
           return console.log(err)
         console.log('Insert prescription successful!')
         socket.emit('create prescription debug', "Success: inserted prescription with id: " + result.insertedId)
+        io.emit('add prescription', {data: data})
       })
     })
 

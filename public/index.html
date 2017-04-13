@@ -430,6 +430,45 @@ const goToPage = (e) =>
 
 </script>
 
+<!-- single prescription from socket -->
+<script id='prescriptionHandlebars' type="text/x-handlebars-template">
+
+<li class="prescription md-dark">
+	<section class="statusDot"></section>
+	<h3 class='customerName tooltip'>{{data.patientFirstName}} {{data.patientLastName}} &nbsp; - 
+	
+	<span class="tooltipBoxTop">
+		<p> 
+			<i class="material-icons">home</i> 
+			<span class='address'> &nbsp; {{data.patientAddress}} </span> 
+		</p>								
+		<p> 
+			<i class="material-icons">cake</i> 
+			<span class='address'> &nbsp; {{data.patientBirthdate}} </span> 
+		</p>
+		<p class='hasApp'> 
+			<i class="material-icons">phone_iphone</i>
+			<span class='address'> &nbsp; has the app </span> 
+		</p>
+		<div class="tooltipTriangleDown"></div>
+	</span>
+
+</h3>
+<h4 class="drugInfo fontWeightNormal">
+	<span class="drugName">{{data.prescriptionName}}</span>
+	<span class="dose">{{data.prescriptionDose}}</span>			
+</h4>
+
+<ul class="prescriptionIcons">
+	<h3 class="quantity">Qty: {{data.prescriptionQuantity}} &nbsp;</h3>
+	<i class="material-icons md-dark md-30" title="Start filling prescription">local_pharmacy</i>
+	<i class="material-icons md-dark md-30" title="Call the patient or doctor">phone</i>
+	<i class="material-icons md-dark md-30" title="Change priority with drag">open_with</i>
+</ul>
+</li>
+
+</script>
+
 <!-- new prescription -->
 <script type="text/x-handlebars-template">
 
@@ -476,7 +515,7 @@ let template = Handlebars.compile(source)
 // let data = {name: "Billy"}
 // let html = template(data)
 
-
+// get existing prescriptions from /prescriptions
 var prescriptionsUrl = "http://medbox.co/prescriptions";
 $.getJSON( prescriptionsUrl, {})
   .done( (data) =>  
@@ -487,6 +526,17 @@ $.getJSON( prescriptionsUrl, {})
 		$('.prescriptions').append(html)
 		console.log('jsonData', jsonData)
   })
+
+// append prescriptions created through socket
+socket.on('add prescription', (data) =>
+{
+	console.log('add prescription listener', data)
+	let socketSource = $('#prescriptionHandlebars').html()
+	let template = Handlebars.compile(socketSource)
+	let socketJsonData = data
+	let socketHtml = template(socketJsonData)
+	$('.prescriptions').append(socketHtml)	
+})
 
 
 
