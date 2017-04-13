@@ -9,6 +9,8 @@ let ObjectId = mongodb.ObjectId
 let http = require('http').Server(app)
 let io = require('socket.io')(http)
 
+let bcrypt = require('bcrypt-nodejs')
+
 let mongoUrl = process.env.MONGOURL || require('./config').mongoUrl
 // global db variable is not best practice and will be refactored
 let gDB = null
@@ -108,7 +110,8 @@ let socketHandler = () =>
       if ( validationResult !== "valid" )
       {
         console.log("Error: invalid create prescription data format")
-        return socket.emit('create prescription debug', validationResult)
+        socket.emit('create prescription debug', validationResult)
+        return
       }
       gDB.collection('prescriptions').insertOne({data}, (err, result) =>
       {
@@ -125,15 +128,23 @@ let socketHandler = () =>
       if ( validationResult !== "valid" )
       {
         console.log("Error: invalid create patient data format")
-        return socket.emit('create prescription debug', validationResult)
+        socket.emit('create patient debug', validationResult)
+        return
       }
-      gDB.collection('patients').insertOne({data}, (err, result) =>
+      else
       {
-        if (err)
-          return console.log(err)
-        console.log('Insert patient successful!')
-        socket.emit('create patient debug', "Successfully inserted patient with id: " + result.insertedId )
-      })
+        let hashedPassword = bcrypt.hashSync(data.password, bcrypt.genSaltSync(8), null) 
+        data.password = hashedPassword
+
+        gDB.collection('patients').insertOne({data}, (err, result) =>
+        {
+          if (err)
+            return console.log(err)
+          console.log('Insert patient successful!')
+          socket.emit('create patient debug', "Successfully inserted patient with id: " + result.insertedId )
+        })        
+      }
+
     })
 
     socket.on('update patient proximity', (data) =>
@@ -259,6 +270,8 @@ let validateNewPatientData = (data) =>
     invalidFields.push('birthdate')
   if (!data.address)
     invalidFields.push('address')
+  if (!data.password)
+    invalidFields.push('password')
 
   if (invalidFields.length === 0)
     return "valid"
