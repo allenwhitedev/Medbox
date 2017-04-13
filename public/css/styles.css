@@ -13,6 +13,11 @@ b { color: #F44336; }
 .md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
 .material-icons.md-30 { font-size: 30px; }
 .fontSize14px { font-size: 14px; }
+.red { background-color: #ac4142 !important; }
+.redText { color: #ac4142; }
+.green { background-color: #4CAF50 !important; }
+.greenText { color: #4CAF50; }
+.greenBorderImp { border: 2px solid #4CAF50 !important; }
 
 
 /* sidebar */
